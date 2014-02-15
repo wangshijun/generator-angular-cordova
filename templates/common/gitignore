@@ -1,5 +1,8 @@
-node_modules
-dist
 .tmp
 .sass-cache
-app/bower_components
+*.keystore
+*.sw*
+platforms/^.*
+www/dist
+www/vendor
+node_modules
