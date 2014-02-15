@@ -27,10 +27,10 @@ module.exports = function (grunt) {
 
         // Watches files for changes and runs tasks based on the changed files
         watch: {<% if (coffee) { %>
-           coffee: {
+            coffee: {
                 files: ['<%%= yeoman.app %>/js/{,*/}*.{coffee,litcoffee,coffee.md}'],
                 tasks: ['newer:coffee:dist']
-           },
+            },
             coffeeTest: {
                 files: ['test/spec/{,*/}*.{coffee,litcoffee,coffee.md}'],
                 tasks: ['newer:coffee:test', 'karma']
@@ -247,6 +247,38 @@ module.exports = function (grunt) {
                         post: {}
                     }
                 }
+            }
+        },
+
+        // Copies remaining files to places other tasks can use
+        copy: {
+            dist: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%%= yeoman.app %>',
+                    dest: '<%%= yeoman.dist %>',
+                    src: [
+                        '*.{ico,png,txt}',
+                        '.htaccess',
+                        '*.html',
+                        'tpl/{,*/}*.html',
+                        'vendor/**/*',
+                        'img/{,*/}*.{webp}',
+                        'fonts/*'
+                    ]
+                }, {
+                    expand: true,
+                    cwd: '.tmp/images',
+                    dest: '<%%= yeoman.dist %>/img',
+                    src: ['generated/*']
+                }]
+            },
+            css: {
+                expand: true,
+                cwd: '<%%= yeoman.app %>/css',
+                dest: '.tmp/css/',
+                src: '{,*/}*.css'
             }
         },
 
