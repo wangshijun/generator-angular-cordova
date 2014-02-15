@@ -12,46 +12,14 @@ var _ = require('lodash');
 
 var Generator = module.exports = function Generator(args, options) {
     yeoman.generators.Base.apply(this, arguments);
-    this.argument('appname', { type: String, required: false });
-    this.appname = this.appname || path.basename(process.cwd());
-    this.appname = this._.camelize(this._.slugify(this._.humanize(this.appname)));
 
     this.option('app-suffix', {
         desc: 'Allow a custom suffix to be added to the module name',
         type: String,
         required: 'false'
     });
-    this.scriptAppName = this.appname + angularUtils.appName(this);
 
     args = ['main'];
-
-    if (typeof this.env.options.appPath === 'undefined') {
-        try {
-            this.env.options.appPath = require(path.join(process.cwd(), 'bower.json')).appPath;
-        } catch (e) {}
-        this.env.options.appPath = this.env.options.appPath || 'www';
-    }
-
-    this.appPath = this.env.options.appPath;
-
-    // TODO improve this
-    console.log('appname: ' + this.appname);
-    console.log('scriptAppName: ' + this.scriptAppName);
-    console.log('appPath: ' + this.appPath);
-
-    if (typeof this.env.options.coffee === 'undefined') {
-        this.option('coffee', {
-            desc: 'Generate CoffeeScript instead of JavaScript'
-        });
-
-        // attempt to detect if user is using CS or not
-        // if cml arg provided, use that; else look for the existence of cs
-        if (!this.options.coffee && this.expandFiles(path.join(this.appPath, '/js/**/*.coffee'), {}).length > 0) {
-            this.options.coffee = true;
-        }
-
-        this.env.options.coffee = this.options.coffee;
-    }
 
     this.hookFor('angular-cordova:common', {
         args: args
@@ -236,11 +204,41 @@ Generator.prototype.askForCordova = function askForCordova() {
             this[key] = props[key];
         }
 
+        this.appname = this._.camelize(this._.slugify(this._.humanize(this.appname)));
+        this.scriptAppName = this.appname;
+
+        if (typeof this.env.options.appPath === 'undefined') {
+            try {
+                this.env.options.appPath = require(path.join(process.cwd(), 'bower.json')).appPath;
+            } catch (e) {}
+            this.env.options.appPath = this.env.options.appPath || 'www';
+        }
+
+        this.appPath = this.env.options.appPath;
+
+        if (typeof this.env.options.coffee === 'undefined') {
+            this.option('coffee', {
+                desc: 'Generate CoffeeScript instead of JavaScript'
+            });
+
+            // attempt to detect if user is using CS or not
+            // if cml arg provided, use that; else look for the existence of cs
+            if (!this.options.coffee && this.expandFiles(path.join(this.appPath, '/js/**/*.coffee'), {}).length > 0) {
+                this.options.coffee = true;
+            }
+
+            this.env.options.coffee = this.options.coffee;
+        }
+
+        // TODO improve this
+        // console.log('appname: ' + this.appname);
+        // console.log('scriptAppName: ' + this.scriptAppName);
+        // console.log('appPath: ' + this.appPath);
+
         cb();
     }.bind(this));
 };
 
-// TODO use chalk to improve this
 Generator.prototype.cordovaCreate = function cordovaCreate() {
     console.log("Creating cordova app: " + this.appname);
     var cb = this.async();
@@ -252,24 +250,27 @@ Generator.prototype.cordovaCreate = function cordovaCreate() {
     }
 };
 
-// TODO use chalk to improve this
 Generator.prototype.addPlatforms = function addPlatforms() {
     if (typeof this.platforms === 'undefined') {
         return;
     }
 
-    console.log('Adding requested platforms to the Cordova project');
+    console.log('Adding requested platforms to the Cordova project...');
 
     var cb = this.async();
     addPlatformsToCordova(0, this.platforms, cb);
 };
 
-// TODO use chalk to improve this
 Generator.prototype.addPlugins = function addPlugins() {
-    console.log('Installing the Cordova plugins');
+    console.log('Installing the Cordova plugins...');
 
     var cb = this.async();
-    addPluginsToCordova(0, this.plugins, cb);
+    if (this.plugins.length) {
+        addPluginsToCordova(0, this.plugins, cb);
+    } else {
+        console.log(chalk.gray('no plugin selected'));
+        cb();
+    }
 }
 
 Generator.prototype.askForCompass = function askForCompass() {
@@ -442,10 +443,9 @@ function addPlatformsToCordova(index, platforms, cb) {
         return;
     }
 
-    console.log('  Adding ' + platforms[index]);
-
     try {
         cordova.platform('add', platforms[index], function () {
+            console.log(chalk.green('✔ ') + ' added ' + chalk.gray(platforms[index]));
             addPlatformsToCordova(index + 1, platforms, cb);
         });
     } catch (err) {
@@ -461,6 +461,7 @@ function addPluginsToCordova(index, plugins, cb) {
     }
 
     cordova.plugin('add', plugins[index], function () {
+        console.log(chalk.green('✔ ') + ' added ' + chalk.gray(plugins[index]));
         addPluginsToCordova(index + 1, plugins, cb);
     });
 }
