@@ -399,6 +399,14 @@ Generator.prototype.packageFiles = function () {
 Generator.prototype.imageFiles = function () {
     this.sourceRoot(path.join(__dirname, 'templates'));
     this.directory('img', 'www/img', true);
+    if (this.platforms.indexOf('android') > -1) {
+        this.directory('res/icon/android', 'www/res/icon/android', true);
+        this.directory('res/screen/android', 'www/screen/icon/android', true);
+    }
+    if (this.platforms.indexOf('ios') > -1) {
+        this.directory('res/icon/ios', 'www/res/icon/ios', true);
+        this.directory('res/screen/ios', 'www/screen/icon/ios', true);
+    }
 };
 
 Generator.prototype._injectDependencies = function _injectDependencies() {
