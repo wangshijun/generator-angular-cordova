@@ -5,7 +5,7 @@ var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 
 
-var AngularIonicCordovaGenerator = yeoman.generators.Base.extend({
+var Generator = yeoman.generators.Base.extend({
   init: function () {
     this.pkg = yeoman.file.readJSON(path.join(__dirname, '../package.json'));
 
@@ -50,7 +50,8 @@ var AngularIonicCordovaGenerator = yeoman.generators.Base.extend({
   projectfiles: function () {
     this.copy('editorconfig', '.editorconfig');
     this.copy('jshintrc', '.jshintrc');
+    this.copy('bowerrc', '.bowerrc');
   }
 });
 
-module.exports = AngularIonicCordovaGenerator;
+module.exports = Generator;
