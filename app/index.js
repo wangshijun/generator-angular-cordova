@@ -350,7 +350,7 @@ Generator.prototype.askForAngularModules = function askForAngularModules() {
         }
 
         if (angMods.length) {
-            this.env.options.angularDeps = "\n  " + angMods.join(",\n  ") +"\n";
+            this.env.options.angularDeps = angMods.join(", ");
         }
 
         cb();

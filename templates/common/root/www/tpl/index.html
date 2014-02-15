@@ -1,15 +1,15 @@
 <!--
-  This template gets placed in the Pet tab's <nav-view> directive.
-  It was wired up in the app config (app.js)
-  The 'pets' data comes from its $scope within PetIndexCtrl (controller.js)
+    This template gets placed in the Pet tab's <nav-view> directive.
+    It was wired up in the app config (app.js)
+    The 'items' data comes from its $scope within IndexController (controller.js)
 -->
 <view title="'Item Information'">
-  <content has-header="true" has-tabs="true">
-    <list>
-      <item ng-repeat="item in items" type="item-text-wrap" href="#/tab/item/{{item.id}}">
-        <h3>{{item.title}}</h3>
-        <p>{{item.description}}</p>
-      </item>
-    </list>
-  </content>
+    <content has-header="true" has-tabs="true">
+        <list>
+            <item ng-repeat="item in items" type="item-text-wrap" href="#/tab/item/{{item.id}}">
+                <h3>{{item.title}}</h3>
+                <p>{{item.description}}</p>
+            </item>
+        </list>
+    </content>
 </view>
