@@ -1,14 +1,13 @@
 'use strict';
-var path = require('path');
-var util = require('util');
-var ScriptBase = require('../script-base.js');
-var angularUtils = require('../util.js');
-
+var path = require('path'),
+    util = require('util'),
+    ScriptBase = require('../script-base.js'),
+    angularUtils = require('../util.js');
 
 var Generator = module.exports = function Generator() {
     ScriptBase.apply(this, arguments);
-    this.hookFor('angular:controller');
-    this.hookFor('angular:view');
+    this.hookFor('angular-cordova:controller');
+    this.hookFor('angular-cordova:view');
 };
 
 util.inherits(Generator, ScriptBase);
@@ -33,3 +32,4 @@ Generator.prototype.rewriteAppJs = function () {
 
     angularUtils.rewriteFile(config);
 };
+

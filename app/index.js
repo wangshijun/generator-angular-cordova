@@ -1,14 +1,13 @@
 'use strict';
-var fs = require('fs');
-var path = require('path');
-var util = require('util');
-var angularUtils = require('../util.js');
-var yeoman = require('yeoman-generator');
-var chalk = require('chalk');
-var wiredep = require('wiredep');
-var cordova = require('cordova');
-var plugman = require('plugman');
-var _ = require('lodash');
+var fs = require('fs'),
+    path = require('path'),
+    util = require('util'),
+    _ = require('lodash'),
+    yeoman = require('yeoman-generator'),
+    chalk = require('chalk'),
+    wiredep = require('wiredep'),
+    cordova = require('cordova'),
+    plugman = require('plugman');
 
 var Generator = module.exports = function Generator(args, options) {
     yeoman.generators.Base.apply(this, arguments);
@@ -233,7 +232,12 @@ Generator.prototype.cordovaCreate = function cordovaCreate() {
     console.log("Creating cordova app: " + this.appname);
     var cb = this.async();
     try {
-        cordova.create(process.cwd(), this.packagename, this.appname, cb);
+        cordova.create(process.cwd(), this.packagename, this.appname, function () {
+            // remove cordova files
+            fs.unlinkSync(process.cwd() + '/' + this.appPath + '/js/index.js');
+            fs.unlinkSync(process.cwd() + '/' + this.appPath + '/css/index.css');
+            cb();
+        });
     } catch (err) {
         console.error('Failed to create cordova proect: ' + err);
         process.exit(1);
