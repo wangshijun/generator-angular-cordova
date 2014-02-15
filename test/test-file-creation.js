@@ -25,7 +25,7 @@ describe('Angular generator', function () {
       if (err) {
         done(err);
       }
-      angular = helpers.createGenerator('angular:app', deps);
+      angular = helpers.createGenerator('angular-cordova:app', deps);
       angular.options['skip-install'] = true;
       done();
     });
@@ -46,20 +46,18 @@ describe('Angular generator', function () {
   });
 
   it('creates expected files', function (done) {
-    var expected = ['app/.htaccess',
-                    'app/404.html',
-                    'app/favicon.ico',
-                    'app/robots.txt',
-                    'app/styles/main.scss',
-                    'app/views/main.html',
-                    ['.bowerrc', /"directory": "app\/bower_components"/],
+    var expected = ['www/404.html',
+                    'www/favicon.ico',
+                    'www/css/main.scss',
+                    'www/tpl/main.html',
+                    ['.bowerrc', /"directory": "www\/vendor"/],
                     'Gruntfile.js',
                     'package.json',
                     ['bower.json', /"name":\s+"temp"/],
-                    'app/scripts/app.js',
-                    'app/index.html',
-                    'app/scripts/controllers/main.js',
-                    'test/spec/controllers/main.js'
+                    'www/js/app.js',
+                    'www/index.html',
+                    'www/js/controller/main.js',
+                    'test/spec/controller/main.js'
                     ];
     helpers.mockPrompt(angular, {
       compass: true,
@@ -75,20 +73,18 @@ describe('Angular generator', function () {
   });
 
   it('creates coffeescript files', function (done) {
-    var expected = ['app/.htaccess',
-                    'app/404.html',
-                    'app/favicon.ico',
-                    'app/robots.txt',
-                    'app/styles/main.scss',
-                    'app/views/main.html',
-                    ['.bowerrc', /"directory": "app\/bower_components"/],
+    var expected = ['www/404.html',
+                    'www/favicon.ico',
+                    'www/css/main.scss',
+                    'www/tpl/main.html',
+                    ['.bowerrc', /"directory": "www\/vendor"/],
                     'Gruntfile.js',
                     'package.json',
                     ['bower.json', /"name":\s+"temp"/],
-                    'app/scripts/app.coffee',
-                    'app/index.html',
-                    'app/scripts/controllers/main.coffee',
-                    'test/spec/controllers/main.coffee'
+                    'www/js/app.coffee',
+                    'www/index.html',
+                    'www/js/controller/main.coffee',
+                    'test/spec/controller/main.coffee'
                     ];
     helpers.mockPrompt(angular, {
       compass: true,
@@ -119,20 +115,20 @@ describe('Angular generator', function () {
    * @param specType The type of the generated spec file, e.g. 'service' - all service types (constant, value, ...)
    *    use the same Service spec template.
    * @param targetDirectory The directory into which the files are generated, e.g. 'directives' - this will be
-   *    located under 'app/scripts' for the sources and 'test/spec' for the tests.
+   *    located under 'www/js' for the sources and 'test/spec' for the tests.
    * @param scriptNameFn The function used to create the name of the created item, e.g. _.classify to generate 'Foo',
    *    or _.camelize to generate 'foo'.
    * @param specNameFn Same as scriptNameFn, but for the describe text used in the Spec file. Some generators use
    *    _.classify, others use _.camelize.
-   * @param suffix An optional suffix to be appended to the generated item name, e.g. 'Ctrl' for controllers, which
-   *    will generate 'FooCtrl'.
+   * @param suffix An optional suffix to be appended to the generated item name, e.g. 'Controller' for controller, which
+   *    will generate 'FooController'.
    * @param done The done function.
    */
   function generatorTest(generatorType, specType, targetDirectory, scriptNameFn, specNameFn, suffix, done) {
     var angularGenerator;
     var name = 'foo';
     var deps = [path.join('../..', generatorType)];
-    angularGenerator = helpers.createGenerator('angular:' + generatorType, deps, [name]);
+    angularGenerator = helpers.createGenerator('angular-cordova:' + generatorType, deps, [name]);
 
     helpers.mockPrompt(angular, {
       compass: true,
@@ -143,7 +139,7 @@ describe('Angular generator', function () {
     angular.run([], function (){
       angularGenerator.run([], function () {
         helpers.assertFiles([
-          [path.join('app/scripts', targetDirectory, name + '.js'), new RegExp(generatorType + '\\(\'' + scriptNameFn(name) + suffix + '\'', 'g')],
+          [path.join('www/js', targetDirectory, name + '.js'), new RegExp(generatorType + '\\(\'' + scriptNameFn(name) + suffix + '\'', 'g')],
           [path.join('test/spec', targetDirectory, name + '.js'), new RegExp('describe\\(\'' + _.classify(specType) + ': ' + specNameFn(name) + suffix + '\'', 'g')]
         ]);
         done();
@@ -153,25 +149,25 @@ describe('Angular generator', function () {
 
   describe('Controller', function () {
     it('should generate a new controller', function (done) {
-      generatorTest('controller', 'controller', 'controllers', _.classify, _.classify, 'Ctrl', done);
+      generatorTest('controller', 'controller', 'controller', _.classify, _.classify, 'Controller', done);
     });
   });
 
   describe('Directive', function () {
     it('should generate a new directive', function (done) {
-      generatorTest('directive', 'directive', 'directives', _.camelize, _.camelize, '', done);
+      generatorTest('directive', 'directive', 'directive', _.camelize, _.camelize, '', done);
     });
   });
 
   describe('Filter', function () {
     it('should generate a new filter', function (done) {
-      generatorTest('filter', 'filter', 'filters', _.camelize, _.camelize, '', done);
+      generatorTest('filter', 'filter', 'filter', _.camelize, _.camelize, '', done);
     });
   });
 
   describe('Service', function () {
     function serviceTest (generatorType, nameFn, done) {
-      generatorTest(generatorType, 'service', 'services', nameFn, nameFn, '', done);
+      generatorTest(generatorType, 'service', 'service', nameFn, nameFn, '', done);
     }
 
     it('should generate a new constant', function (done) {
@@ -199,7 +195,7 @@ describe('Angular generator', function () {
     it('should generate a new view', function (done) {
       var angularView;
       var deps = ['../../view'];
-      angularView = helpers.createGenerator('angular:view', deps, ['foo']);
+      angularView = helpers.createGenerator('angular-cordova:view', deps, ['foo']);
 
       helpers.mockPrompt(angular, {
         compass: true,
@@ -210,7 +206,7 @@ describe('Angular generator', function () {
       angular.run([], function (){
         angularView.run([], function () {
           helpers.assertFile(
-            ['app/views/foo.html']
+            ['www/tpl/foo.html']
           );
           done();
         });
@@ -220,18 +216,18 @@ describe('Angular generator', function () {
     it('should generate a new view in subdirectories', function (done) {
       var angularView;
       var deps = ['../../view'];
-      angularView = helpers.createGenerator('angular:view', deps, ['foo/bar']);
+      angularView = helpers.createGenerator('angular-cordova:view', deps, ['foo/bar']);
 
       helpers.mockPrompt(angular, {
         compass: true,
-        bootstrap: true,
-        compassBootstrap: true,
+        ionic: true,
+        compassIonic: true,
         modules: []
       });
       angular.run([], function (){
         angularView.run([], function () {
           helpers.assertFile(
-            ['app/views/foo/bar.html']
+            ['www/tpl/foo/bar.html']
           );
           done();
         });

@@ -5,7 +5,7 @@ angular.module('<%= scriptAppName %>', [<%= angularModules %>])<% if (ngRoute) {
     $routeProvider
       .when '/',
         templateUrl: 'tpl/main.html'
-        controller: 'MainCtrl'
+        controller: 'MainController'
       .otherwise
         redirectTo: '/'
 <% } %>

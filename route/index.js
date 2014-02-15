@@ -19,8 +19,8 @@ Generator.prototype.rewriteAppJs = function () {
         file: path.join(this.env.options.appPath, 'js/app.' + (coffee ? 'coffee' : 'js')),
         needle: '.otherwise',
         splicable: [
-            "  templateUrl: 'views/" + this.name.toLowerCase() + ".html'" + (coffee ? "" : "," ),
-            "  controller: '" + this.classedName + "Ctrl'"
+            "  templateUrl: 'tpl/" + this.name.toLowerCase() + ".html'" + (coffee ? "" : "," ),
+            "  controller: '" + this.classedName + "Controller'"
         ]
     };
 
