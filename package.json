@@ -1,0 +1,35 @@
+{
+  "name": "generator-angular-ionic-cordova",
+  "version": "0.0.0",
+  "description": "Yeoman generator",
+  "license": "MIT",
+  "main": "app/index.js",
+  "repository": "wangshijun2010/generator-angular-ionic-cordova",
+  "author": {
+    "name": "wangshijun",
+    "email": "wangshijun2010@gmail.com",
+    "url": "https://github.com/wangshijun2010"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "files": [
+    "app"
+  ],
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "dependencies": {
+    "yeoman-generator": "~0.16.0",
+    "chalk": "~0.4.0"
+  },
+  "devDependencies": {
+    "mocha": "*"
+  },
+  "peerDependencies": {
+    "yo": ">=1.0.0"
+  }
+}
