@@ -347,6 +347,10 @@ Generator.prototype.askForAngularModules = function askForAngularModules() {
 
         var angMods = [];
 
+        if (this.ionic) {
+            angMods.push("'ionic'");
+        }
+
         if (this.cookiesModule) {
             angMods.push("'ngCookies'");
         }

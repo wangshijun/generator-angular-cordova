@@ -2,7 +2,7 @@
 
 angular.module('<%= scriptAppName %>')
     .config(function ($provide) {
-        $provide.decorator('<%= cameledName %>', function ($delegate) {
+        $provide.decorator('<%= cameledName %>', function <%= cameledName %>($delegate) {
             // decorate the $delegate
             return $delegate;
         });

@@ -12,12 +12,12 @@ var Generator = module.exports = function Generator() {
         try {
             this.env.options.appPath = require(path.join(process.cwd(), 'bower.json')).appPath;
         } catch (e) {}
-        this.env.options.appPath = this.env.options.appPath || 'app';
+        this.env.options.appPath = this.env.options.appPath || 'www';
     }
 };
 
 util.inherits(Generator, yeoman.generators.NamedBase);
 
 Generator.prototype.createViewFiles = function createViewFiles() {
-    this.template( 'common/view.html', path.join(this.env.options.appPath, 'views', this.name.toLowerCase() + '.html'));
+    this.template( 'common/view.html', path.join(this.env.options.appPath, 'tpl', this.name.toLowerCase() + '.html'));
 };

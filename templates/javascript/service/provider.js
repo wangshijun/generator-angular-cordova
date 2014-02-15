@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('<%= scriptAppName %>')
-    .provider('<%= cameledName %>', function () {
+    .provider('<%= cameledName %>', function <%= cameledName %>() {
 
         // Private variables
         var salutation = 'Hello';
