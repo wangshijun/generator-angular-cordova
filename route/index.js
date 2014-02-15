@@ -6,34 +6,30 @@ var angularUtils = require('../util.js');
 
 
 var Generator = module.exports = function Generator() {
-  ScriptBase.apply(this, arguments);
-  this.hookFor('angular:controller');
-  this.hookFor('angular:view');
+    ScriptBase.apply(this, arguments);
+    this.hookFor('angular:controller');
+    this.hookFor('angular:view');
 };
 
 util.inherits(Generator, ScriptBase);
 
 Generator.prototype.rewriteAppJs = function () {
-  var coffee = this.env.options.coffee;
-  var config = {
-    file: path.join(
-      this.env.options.appPath,
-      'scripts/app.' + (coffee ? 'coffee' : 'js')
-    ),
-    needle: '.otherwise',
-    splicable: [
-      "  templateUrl: 'views/" + this.name.toLowerCase() + ".html'" + (coffee ? "" : "," ),
-      "  controller: '" + this.classedName + "Ctrl'"
-    ]
-  };
+    var coffee = this.env.options.coffee;
+    var config = {
+        file: path.join(this.env.options.appPath, 'scripts/app.' + (coffee ? 'coffee' : 'js')),
+        needle: '.otherwise',
+        splicable: [
+            "  templateUrl: 'views/" + this.name.toLowerCase() + ".html'" + (coffee ? "" : "," ),
+            "  controller: '" + this.classedName + "Ctrl'"
+        ]
+    };
 
-  if (coffee) {
-    config.splicable.unshift(".when '/" + this.name + "',");
-  }
-  else {
-    config.splicable.unshift(".when('/" + this.name + "', {");
-    config.splicable.push("})");
-  }
+    if (coffee) {
+        config.splicable.unshift(".when '/" + this.name + "',");
+    } else {
+        config.splicable.unshift(".when('/" + this.name + "', {");
+        config.splicable.push("})");
+    }
 
-  angularUtils.rewriteFile(config);
+    angularUtils.rewriteFile(config);
 };

@@ -27,7 +27,7 @@ var Generator = module.exports = function Generator(args, options) {
         try {
             this.env.options.appPath = require(path.join(process.cwd(), 'bower.json')).appPath;
         } catch (e) {}
-        this.env.options.appPath = this.env.options.appPath || 'app';
+        this.env.options.appPath = this.env.options.appPath || 'www';
     }
 
     this.appPath = this.env.options.appPath;
@@ -226,14 +226,7 @@ Generator.prototype.bootstrapFiles = function bootstrapFiles() {
     var sass = this.compass;
     var mainFile = 'main.' + (sass ? 's' : '') + 'css';
 
-    if (this.bootstrap && !sass) {
-        this.copy('fonts/glyphicons-halflings-regular.eot', 'app/fonts/glyphicons-halflings-regular.eot');
-        this.copy('fonts/glyphicons-halflings-regular.ttf', 'app/fonts/glyphicons-halflings-regular.ttf');
-        this.copy('fonts/glyphicons-halflings-regular.svg', 'app/fonts/glyphicons-halflings-regular.svg');
-        this.copy('fonts/glyphicons-halflings-regular.woff', 'app/fonts/glyphicons-halflings-regular.woff');
-    }
-
-    this.copy('styles/' + mainFile, 'app/styles/' + mainFile);
+    this.copy('styles/' + mainFile, 'www/styles/' + mainFile);
 };
 
 Generator.prototype.appJs = function appJs() {
@@ -242,7 +235,7 @@ Generator.prototype.appJs = function appJs() {
         fileType: 'js',
         optimizedPath: 'scripts/scripts.js',
         sourceFileList: ['scripts/app.js', 'scripts/controllers/main.js'],
-        searchPath: ['.tmp', 'app']
+        searchPath: ['.tmp', 'www']
     });
 };
 
@@ -255,12 +248,15 @@ Generator.prototype.packageFiles = function () {
     this.coffee = this.env.options.coffee;
     this.template('../../templates/common/_bower.json', 'bower.json');
     this.template('../../templates/common/_package.json', 'package.json');
+    this.template('../../templates/common/bowerrc', '.bowerrc');
+    this.template('../../templates/common/jshintrc', '.jshintrc');
+    this.template('../../templates/common/editorconfig', '.editorconfig');
     this.template('../../templates/common/Gruntfile.js', 'Gruntfile.js');
 };
 
 Generator.prototype.imageFiles = function () {
     this.sourceRoot(path.join(__dirname, 'templates'));
-    this.directory('images', 'app/images', true);
+    this.directory('images', 'www/images', true);
 };
 
 Generator.prototype._injectDependencies = function _injectDependencies() {
@@ -274,10 +270,10 @@ Generator.prototype._injectDependencies = function _injectDependencies() {
         console.log(howToInstall);
     } else {
         wiredep({
-            directory: 'app/bower_components',
+            directory: 'www/vendor',
             bowerJson: JSON.parse(fs.readFileSync('./bower.json')),
-            ignorePath: 'app/',
-            htmlFile: 'app/index.html',
+            ignorePath: 'www/',
+            htmlFile: 'www/index.html',
             cssPattern: '<link rel="stylesheet" href="{{filePath}}">'
         });
     }
