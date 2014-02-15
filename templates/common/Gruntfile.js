@@ -275,32 +275,6 @@ module.exports = function (grunt) {
                 }]
             }
         },
-        svgmin: {
-            dist: {
-                files: [{
-                    expand: true,
-                    cwd: '<%%= yeoman.app %>/img',
-                    src: '{,*/}*.svg',
-                    dest: '<%%= yeoman.dist %>/img'
-                }]
-            }
-        },
-        htmlmin: {
-            dist: {
-                options: {
-                    collapseWhitespace: true,
-                    collapseBooleanAttributes: true,
-                    removeCommentsFromCDATA: true,
-                    removeOptionalTags: true
-                },
-                files: [{
-                    expand: true,
-                    cwd: '<%%= yeoman.dist %>',
-                    src: ['*.html', 'tpl/{,*/}*.html'],
-                    dest: '<%%= yeoman.dist %>'
-                }]
-            }
-        },
 
         // ngmin tries to make the code safe for minification automatically by
         // using the Angular long form for dependency injection. It doesn't work on
@@ -332,8 +306,7 @@ module.exports = function (grunt) {
                 'coffee',<% } %><% if (compass) { %>
                 'compass:dist',<% } else { %>
                 'copy:css',<% } %>
-                'imagemin',
-                'svgmin'
+                'imagemin'
             ]
         },
 
@@ -388,8 +361,7 @@ module.exports = function (grunt) {
         'cssmin',
         'uglify',
         'rev',
-        'usemin',
-        'htmlmin'
+        'usemin'
     ]);
 
     grunt.registerTask('default', [
