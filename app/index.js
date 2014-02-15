@@ -13,7 +13,7 @@ var _ = require('lodash');
 var Generator = module.exports = function Generator(args, options) {
     yeoman.generators.Base.apply(this, arguments);
 
-    args = ['main'];
+    args = ['index'];
 
     this.hookFor('angular-cordova:common', {
         args: args
@@ -45,10 +45,6 @@ var Generator = module.exports = function Generator(args, options) {
 
         if (this.sanitizeModule) {
             enabledComponents.push('angular-sanitize/angular-sanitize.js');
-        }
-
-        if (this.routeModule) {
-            enabledComponents.push('angular-route/angular-route.js');
         }
 
         this.invoke('karma:app', {
@@ -326,10 +322,6 @@ Generator.prototype.askForAngularModules = function askForAngularModules() {
                 value: 'sanitizeModule',
                 name: 'angular-sanitize.js',
                 checked: true
-            }, {
-                value: 'routeModule',
-                name: 'angular-route.js',
-                checked: true
             }]
     }];
 
@@ -338,7 +330,6 @@ Generator.prototype.askForAngularModules = function askForAngularModules() {
         this.resourceModule = hasMod('resourceModule');
         this.cookiesModule = hasMod('cookiesModule');
         this.sanitizeModule = hasMod('sanitizeModule');
-        this.routeModule = hasMod('routeModule');
 
         var angMods = [];
 
@@ -353,12 +344,9 @@ Generator.prototype.askForAngularModules = function askForAngularModules() {
         if (this.resourceModule) {
             angMods.push("'ngResource'");
         }
+
         if (this.sanitizeModule) {
             angMods.push("'ngSanitize'");
-        }
-        if (this.routeModule) {
-            angMods.push("'ngRoute'");
-            this.env.options.ngRoute = true;
         }
 
         if (angMods.length) {
@@ -370,7 +358,6 @@ Generator.prototype.askForAngularModules = function askForAngularModules() {
 };
 
 Generator.prototype.readIndex = function readIndex() {
-    this.ngRoute = this.env.options.ngRoute;
     this.indexFile = this.engine(this.read('../../templates/common/index.html'), this);
 };
 
@@ -386,7 +373,10 @@ Generator.prototype.appJs = function appJs() {
         html: this.indexFile,
         fileType: 'js',
         optimizedPath: 'js/js.js',
-        sourceFileList: ['js/app.js', 'js/controller/main.js'],
+        sourceFileList: [
+            'js/app.js',
+            'js/controller/index.js'
+        ],
         searchPath: ['.tmp', 'www']
     });
 };

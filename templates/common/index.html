@@ -15,12 +15,23 @@
         <!-- endbuild -->
     </head>
     <body ng-app="<%= scriptAppName %>" animation="slide-left-right-ios7">
-        <!-- Add your site or application content here -->
-        <% if (ngRoute) {
-        %><div class="container" ng-view></div><%
-        } else {
-        %><div class="container" ng-include="'tpl/main.html'" ng-controller="MainController"></div><%
-        } %>
+
+        <!--
+          The nav bar that will be updated as we navigate between views
+          Additional attributes set its look, nav-bar animation and icons
+          Icons provided by Ionicons: http://ionicons.com/
+        -->
+        <nav-bar type="bar-positive"
+                 animation="nav-title-slide-ios7"
+                 back-button-type="button-icon"
+                 back-button-icon="ion-ios7-arrow-back"></nav-bar>
+
+        <!--
+          The views will be rendered in the <nav-view> directive below
+          Templates are in the /templates folder (but you could also
+          have templates inline in this html file if you'd like).
+        -->
+        <nav-view></nav-view>
 
         <!-- cordova script -->
         <script src="cordova.js"></script>

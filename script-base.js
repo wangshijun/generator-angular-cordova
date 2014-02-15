@@ -49,8 +49,8 @@ var Generator = module.exports = function Generator() {
     this.scriptSuffix = '.js';
 
     if (this.env.options.coffee) {
-    sourceRoot = '/templates/coffeescript';
-    this.scriptSuffix = '.coffee';
+        sourceRoot = '/templates/coffeescript';
+        this.scriptSuffix = '.coffee';
     }
 
     this.sourceRoot(path.join(__dirname, sourceRoot));
