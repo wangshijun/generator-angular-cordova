@@ -3,5 +3,5 @@ node_js:
   - '0.10'
 before_install:
   - currentfolder=${PWD##*/}
-  - if [ "$currentfolder" != 'generator-angular-ionic-cordova' ]; then cd .. && eval "mv $currentfolder generator-angular-ionic-cordova" && cd generator-angular-ionic-cordova; fi
+  - if [ "$currentfolder" != 'generator-angular-cordova' ]; then cd .. && eval "mv $currentfolder generator-angular-cordova" && cd generator-angular-cordova; fi
 

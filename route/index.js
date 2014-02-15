@@ -16,7 +16,7 @@ util.inherits(Generator, ScriptBase);
 Generator.prototype.rewriteAppJs = function () {
     var coffee = this.env.options.coffee;
     var config = {
-        file: path.join(this.env.options.appPath, 'scripts/app.' + (coffee ? 'coffee' : 'js')),
+        file: path.join(this.env.options.appPath, 'js/app.' + (coffee ? 'coffee' : 'js')),
         needle: '.otherwise',
         splicable: [
             "  templateUrl: 'views/" + this.name.toLowerCase() + ".html'" + (coffee ? "" : "," ),

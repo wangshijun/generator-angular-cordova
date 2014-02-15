@@ -1,10 +1,10 @@
 {
-  "name": "generator-angular-ionic-cordova",
+  "name": "generator-angular-cordova",
   "version": "0.0.1",
   "description": "Yeoman generator",
   "license": "MIT",
   "main": "app/index.js",
-  "repository": "wangshijun2010/generator-angular-ionic-cordova",
+  "repository": "wangshijun2010/generator-angular-cordova",
   "author": {
     "name": "wangshijun",
     "email": "wangshijun2010@gmail.com",

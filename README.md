@@ -1,4 +1,4 @@
-# generator-angular-ionic-cordova [![Build Status](https://secure.travis-ci.org/wangshijun2010/generator-angular-ionic-cordova.png?branch=master)](https://travis-ci.org/wangshijun2010/generator-angular-ionic-cordova)
+# generator-angular-cordova [![Build Status](https://secure.travis-ci.org/wangshijun2010/generator-angular-cordova.png?branch=master)](https://travis-ci.org/wangshijun2010/generator-angular-cordova)
 
 > [Yeoman](http://yeoman.io) generator
 
@@ -23,16 +23,16 @@ $ npm install -g yo
 
 Yeoman travels light. He didn't pack any generators when he moved in. You can think of a generator like a plug-in. You get to choose what type of application you wish to create, such as a Backbone application or even a Chrome extension.
 
-To install generator-angular-ionic-cordova from npm, run:
+To install generator-angular-cordova from npm, run:
 
 ```
-$ npm install -g generator-angular-ionic-cordova
+$ npm install -g generator-angular-cordova
 ```
 
 Finally, initiate the generator:
 
 ```
-$ yo angular-ionic-cordova
+$ yo angular-cordova
 ```
 
 ### Getting To Know Yeoman
