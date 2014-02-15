@@ -6,7 +6,9 @@ var angularUtils = require('../util.js');
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var wiredep = require('wiredep');
-
+var cordova = require('cordova');
+var plugman = require('plugman');
+var _ = require('lodash');
 
 var Generator = module.exports = function Generator(args, options) {
     yeoman.generators.Base.apply(this, arguments);
@@ -32,6 +34,11 @@ var Generator = module.exports = function Generator(args, options) {
 
     this.appPath = this.env.options.appPath;
 
+    // TODO improve this
+    console.log('appname: ' + this.appname);
+    console.log('scriptAppName: ' + this.scriptAppName);
+    console.log('appPath: ' + this.appPath);
+
     if (typeof this.env.options.coffee === 'undefined') {
         this.option('coffee', {
             desc: 'Generate CoffeeScript instead of JavaScript'
@@ -39,7 +46,7 @@ var Generator = module.exports = function Generator(args, options) {
 
         // attempt to detect if user is using CS or not
         // if cml arg provided, use that; else look for the existence of cs
-        if (!this.options.coffee && this.expandFiles(path.join(this.appPath, '/scripts/**/*.coffee'), {}).length > 0) {
+        if (!this.options.coffee && this.expandFiles(path.join(this.appPath, '/js/**/*.coffee'), {}).length > 0) {
             this.options.coffee = true;
         }
 
@@ -119,6 +126,152 @@ Generator.prototype.welcome = function welcome() {
     }
 };
 
+Generator.prototype.askForCordova = function askForCordova() {
+    var cb = this.async();
+
+    // We do some working directory hoping, so keep a track where we start
+    this.cwd = process.cwd();
+
+    var prompts = [
+        {
+            name: 'appname',
+            message: 'What is the name of your app? (Spaces aren\'t allowed)',
+            default: 'HelloCordova'
+        },
+        {
+            name: 'packagename',
+            message: 'What would you like the package to be?',
+            default: 'io.cordova.hellocordova'
+        },
+        {
+            type: 'checkbox',
+            name: 'platforms',
+            message: 'What platforms would you like to add support for?',
+            choices: [
+                {
+                    name: 'Android',
+                    value: 'android',
+                    checked: true
+                },
+                {
+                    name: 'iOS',
+                    value: 'ios',
+                    checked: true
+                },
+                {
+                    name: 'Blackberry 10',
+                    value: 'blackberry10',
+                    checked: false
+                },
+                {
+                    name: 'Windows Phone 7',
+                    value: 'wp7',
+                    checked: false
+                },
+                {
+                    name: 'Windows Phone 8',
+                    value: 'wp7',
+                    checked: false
+                }
+            ]
+        },
+        {
+            type: 'checkbox',
+            name: 'plugins',
+            message: 'What plugins would you like to include by default?',
+            // Find these values using command 'plugman search <keyword>'
+            // Find these values here: https://git-wip-us.apache.org/repos/asf
+            choices: [
+                {
+                    name: 'Device Info',
+                    value: 'https://git-wip-us.apache.org/repos/asf/cordova-plugin-device.git',
+                    checked: false
+                },
+                {
+                    name: 'Camera',
+                    value: 'https://git-wip-us.apache.org/repos/asf/cordova-plugin-camera.git',
+                    checked: false
+                },
+                {
+                    name: 'Contacts',
+                    value: 'https://git-wip-us.apache.org/repos/asf/cordova-plugin-contacts.git',
+                    checked: false
+                },
+                {
+                    name: 'Dialogs',
+                    value: 'https://git-wip-us.apache.org/repos/asf/cordova-plugin-dialogs.git',
+                    checked: false
+                },
+                {
+                    name: 'Geolocation',
+                    value: 'https://git-wip-us.apache.org/repos/asf/cordova-plugin-geolocation.git',
+                    checked: false
+                },
+                {
+                    name: 'In App Browser',
+                    value: 'https://git-wip-us.apache.org/repos/asf/cordova-plugin-inappbrowser.git',
+                    checked: false
+                },
+                {
+                    name: 'Audio Handler (a.k.a Media on Cordova Docs)',
+                    value: 'https://git-wip-us.apache.org/repos/asf/cordova-plugin-media.git',
+                    checked: false
+                },
+                {
+                    name: 'Media Capture',
+                    value: 'https://git-wip-us.apache.org/repos/asf/cordova-plugin-media-capture.git',
+                    checked: false
+                },
+                {
+                    name: 'Network Information',
+                    value: 'https://git-wip-us.apache.org/repos/asf/cordova-plugin-network-information.git',
+                    checked: false
+                }
+            ]
+        }
+    ];
+
+    this.prompt(prompts, function (props) {
+        for (var key in props) {
+            this[key] = props[key];
+        }
+
+        cb();
+    }.bind(this));
+};
+
+// TODO use chalk to improve this
+Generator.prototype.cordovaCreate = function cordovaCreate() {
+    console.log("Creating cordova app: " + this.appname);
+    var cb = this.async();
+    try {
+        cordova.create(process.cwd(), this.packagename, this.appname, cb);
+    } catch (err) {
+        console.error('Failed to create cordova proect: ' + err);
+        process.exit(1);
+    }
+};
+
+// TODO use chalk to improve this
+Generator.prototype.addPlatforms = function addPlatforms() {
+    if (typeof this.platforms === 'undefined') {
+        return;
+    }
+
+    console.log('Adding requested platforms to the Cordova project');
+
+    var cb = this.async();
+    addPlatformsToCordova(0, this.platforms, cb);
+};
+
+// TODO use chalk to improve this
+Generator.prototype.addPlugins = function addPlugins() {
+    console.log('Installing the Cordova plugins');
+
+    var cb = this.async();
+    addPluginsToCordova(0, this.plugins, cb);
+}
+
 Generator.prototype.askForCompass = function askForCompass() {
     var cb = this.async();
 
@@ -126,7 +279,7 @@ Generator.prototype.askForCompass = function askForCompass() {
         type: 'confirm',
         name: 'compass',
         message: 'Would you like to use Sass (with Compass)?',
-        default: true
+        default: false
     }], function (props) {
         this.compass = props.compass;
 
@@ -134,32 +287,32 @@ Generator.prototype.askForCompass = function askForCompass() {
     }.bind(this));
 };
 
-Generator.prototype.askForBootstrap = function askForBootstrap() {
+Generator.prototype.askForIonic = function askForIonic() {
     var compass = this.compass;
     var cb = this.async();
 
     this.prompt([{
         type: 'confirm',
-        name: 'bootstrap',
-        message: 'Would you like to include Twitter Bootstrap?',
+        name: 'ionic',
+        message: 'Would you like to include Ionic',
         default: true
     }, {
         type: 'confirm',
-        name: 'compassBootstrap',
-        message: 'Would you like to use the Sass version of Twitter Bootstrap?',
-        default: true,
+        name: 'compassIonic',
+        message: 'Would you like to use the Sass version of Ionic',
+        default: false,
         when: function (props) {
-            return props.bootstrap && compass;
+            return props.ionic && compass;
         }
     }], function (props) {
-        this.bootstrap = props.bootstrap;
-        this.compassBootstrap = props.compassBootstrap;
+        this.ionic = props.ionic;
+        this.compassIonic = props.compassIonic;
 
         cb();
     }.bind(this));
 };
 
-Generator.prototype.askForModules = function askForModules() {
+Generator.prototype.askForAngularModules = function askForAngularModules() {
     var cb = this.async();
 
     var prompts = [{
@@ -226,15 +379,15 @@ Generator.prototype.bootstrapFiles = function bootstrapFiles() {
     var sass = this.compass;
     var mainFile = 'main.' + (sass ? 's' : '') + 'css';
 
-    this.copy('styles/' + mainFile, 'www/styles/' + mainFile);
+    this.copy('css/' + mainFile, 'www/css/' + mainFile);
 };
 
 Generator.prototype.appJs = function appJs() {
     this.indexFile = this.appendFiles({
         html: this.indexFile,
         fileType: 'js',
-        optimizedPath: 'scripts/scripts.js',
-        sourceFileList: ['scripts/app.js', 'scripts/controllers/main.js'],
+        optimizedPath: 'js/js.js',
+        sourceFileList: ['js/app.js', 'js/controllers/main.js'],
         searchPath: ['.tmp', 'www']
     });
 };
@@ -252,6 +405,11 @@ Generator.prototype.packageFiles = function () {
     this.template('../../templates/common/jshintrc', '.jshintrc');
     this.template('../../templates/common/editorconfig', '.editorconfig');
     this.template('../../templates/common/Gruntfile.js', 'Gruntfile.js');
+};
+
+Generator.prototype.imageFiles = function () {
+    this.sourceRoot(path.join(__dirname, 'templates'));
+    this.directory('images', 'www/images', true);
 };
 
 Generator.prototype.imageFiles = function () {
@@ -278,3 +436,33 @@ Generator.prototype._injectDependencies = function _injectDependencies() {
         });
     }
 };
+
+function addPlatformsToCordova(index, platforms, cb) {
+    if (!(index < platforms.length)) {
+        cb();
+        return;
+    }
+
+    console.log('  Adding ' + platforms[index]);
+
+    try {
+        cordova.platform('add', platforms[index], function () {
+            addPlatformsToCordova(index + 1, platforms, cb);
+        });
+    } catch (err) {
+        console.error('Failed to add platform ' + platforms['index'] + ': ' + err);
+        process.exit(1);
+    }
+}
+
+function addPluginsToCordova(index, plugins, cb) {
+    if (!(index < plugins.length)) {
+        cb();
+        return;
+    }
+
+    cordova.plugin('add', plugins[index], function () {
+        addPluginsToCordova(index + 1, plugins, cb);
+    });
+}
+

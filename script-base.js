@@ -38,7 +38,7 @@ var Generator = module.exports = function Generator() {
 
         // attempt to detect if user is using CS or not
         // if cml arg provided, use that; else look for the existence of cs
-        if (!this.options.coffee && this.expandFiles(path.join(this.env.options.appPath, '/scripts/**/*.coffee'), {}).length > 0) {
+        if (!this.options.coffee && this.expandFiles(path.join(this.env.options.appPath, '/js/**/*.coffee'), {}).length > 0) {
             this.options.coffee = true;
         }
 
@@ -78,7 +78,7 @@ Generator.prototype.addScriptToIndex = function (script) {
             file: fullPath,
             needle: '<!-- endbuild -->',
             splicable: [
-                '<script src="scripts/' + script.toLowerCase().replace('\\', '/') + '.js"></script>'
+                '<script src="js/' + script.toLowerCase().replace('\\', '/') + '.js"></script>'
             ]
         });
     } catch (e) {
@@ -92,7 +92,7 @@ Generator.prototype.generateSourceAndTest = function (appTemplate, testTemplate,
         this.cameledName = this.classedName;
     }
 
-    this.appTemplate(appTemplate, path.join('scripts', targetDirectory, this.name));
+    this.appTemplate(appTemplate, path.join('js', targetDirectory, this.name));
     this.testTemplate(testTemplate, path.join(targetDirectory, this.name));
     if (!skipAdd) {
         this.addScriptToIndex(path.join(targetDirectory, this.name));

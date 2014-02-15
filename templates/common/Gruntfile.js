@@ -28,7 +28,7 @@ module.exports = function (grunt) {
         // Watches files for changes and runs tasks based on the changed files
         watch: {<% if (coffee) { %>
            coffee: {
-                files: ['<%%= yeoman.app %>/scripts/{,*/}*.{coffee,litcoffee,coffee.md}'],
+                files: ['<%%= yeoman.app %>/js/{,*/}*.{coffee,litcoffee,coffee.md}'],
                 tasks: ['newer:coffee:dist']
            },
             coffeeTest: {
@@ -36,7 +36,7 @@ module.exports = function (grunt) {
                 tasks: ['newer:coffee:test', 'karma']
             },<% } else { %>
             js: {
-                files: ['<%%= yeoman.app %>/scripts/{,*/}*.js'],
+                files: ['<%%= yeoman.app %>/js/{,*/}*.js'],
                 tasks: ['newer:jshint:all'],
                 options: {
                     livereload: true
@@ -47,12 +47,12 @@ module.exports = function (grunt) {
                 tasks: ['newer:jshint:test', 'karma']
             },<% } %><% if (compass) { %>
             compass: {
-                files: ['<%%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
+                files: ['<%%= yeoman.app %>/css/{,*/}*.{scss,sass}'],
                 tasks: ['compass:server', 'autoprefixer']
             },<% } else { %>
-            styles: {
-                files: ['<%%= yeoman.app %>/styles/{,*/}*.css'],
-                tasks: ['newer:copy:styles', 'autoprefixer']
+            css: {
+                files: ['<%%= yeoman.app %>/css/{,*/}*.css'],
+                tasks: ['newer:copy:css', 'autoprefixer']
             },<% } %>
             gruntfile: {
                 files: ['Gruntfile.js']
@@ -63,9 +63,9 @@ module.exports = function (grunt) {
                 },
                 files: [
                     '<%%= yeoman.app %>/{,*/}*.html',
-                    '.tmp/styles/{,*/}*.css',<% if (coffee) { %>
-                    '.tmp/scripts/{,*/}*.js',<% } %>
-                    '<%%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+                    '.tmp/css/{,*/}*.css',<% if (coffee) { %>
+                    '.tmp/js/{,*/}*.js',<% } %>
+                    '<%%= yeoman.app %>/img/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ]
             }
         },
@@ -112,7 +112,7 @@ module.exports = function (grunt) {
             },
             all: [
                 'Gruntfile.js'<% if (!coffee) { %>,
-                '<%%= yeoman.app %>/scripts/{,*/}*.js'<% } %>
+                '<%%= yeoman.app %>/js/{,*/}*.js'<% } %>
             ]<% if (!coffee) { %>,
             test: {
                 options: {
@@ -145,9 +145,9 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '.tmp/styles/',
+                    cwd: '.tmp/css/',
                     src: '{,*/}*.css',
-                    dest: '.tmp/styles/'
+                    dest: '.tmp/css/'
                 }]
             }
         },
@@ -170,9 +170,9 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%%= yeoman.app %>/scripts',
+                    cwd: '<%%= yeoman.app %>/js',
                     src: '{,*/}*.coffee',
-                    dest: '.tmp/scripts',
+                    dest: '.tmp/js',
                     ext: '.js'
                 }]
             },
@@ -191,23 +191,23 @@ module.exports = function (grunt) {
         // Compiles Sass to CSS and generates necessary files if requested
         compass: {
             options: {
-                sassDir: '<%%= yeoman.app %>/styles',
-                cssDir: '.tmp/styles',
-                generatedImagesDir: '.tmp/images/generated',
-                imagesDir: '<%%= yeoman.app %>/images',
-                javascriptsDir: '<%%= yeoman.app %>/scripts',
-                fontsDir: '<%%= yeoman.app %>/styles/fonts',
+                sassDir: '<%%= yeoman.app %>/css',
+                cssDir: '.tmp/css',
+                generatedImagesDir: '.tmp/img/generated',
+                imagesDir: '<%%= yeoman.app %>/img',
+                javascriptsDir: '<%%= yeoman.app %>/js',
+                fontsDir: '<%%= yeoman.app %>/css/fonts',
                 importPath: '<%%= yeoman.app %>/bower_components',
-                httpImagesPath: '/images',
-                httpGeneratedImagesPath: '/images/generated',
-                httpFontsPath: '/styles/fonts',
+                httpImagesPath: '/img',
+                httpGeneratedImagesPath: '/img/generated',
+                httpFontsPath: '/css/fonts',
                 relativeAssets: false,
                 assetCacheBuster: false,
                 raw: 'Sass::Script::Number.precision = 10\n'
             },
             dist: {
                 options: {
-                    generatedImagesDir: '<%%= yeoman.dist %>/images/generated'
+                    generatedImagesDir: '<%%= yeoman.dist %>/img/generated'
                 }
             },
             server: {
@@ -222,10 +222,10 @@ module.exports = function (grunt) {
             dist: {
                 files: {
                 src: [
-                    '<%%= yeoman.dist %>/scripts/{,*/}*.js',
-                    '<%%= yeoman.dist %>/styles/{,*/}*.css',
-                    '<%%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-                    '<%%= yeoman.dist %>/styles/fonts/*'
+                    '<%%= yeoman.dist %>/js/{,*/}*.js',
+                    '<%%= yeoman.dist %>/css/{,*/}*.css',
+                    '<%%= yeoman.dist %>/img/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+                    '<%%= yeoman.dist %>/css/fonts/*'
                  ]
                  }
              }
@@ -253,7 +253,7 @@ module.exports = function (grunt) {
         // Performs rewrites based on rev and the useminPrepare configuration
         usemin: {
             html: ['<%%= yeoman.dist %>/{,*/}*.html'],
-            css: ['<%%= yeoman.dist %>/styles/{,*/}*.css'],
+            css: ['<%%= yeoman.dist %>/css/{,*/}*.css'],
             options: {
                 assetsDirs: ['<%%= yeoman.dist %>']
             }
@@ -269,9 +269,9 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%%= yeoman.app %>/images',
+                    cwd: '<%%= yeoman.app %>/img',
                     src: '{,*/}*.{png,jpg,jpeg,gif}',
-                    dest: '<%%= yeoman.dist %>/images'
+                    dest: '<%%= yeoman.dist %>/img'
                 }]
             }
         },
@@ -279,9 +279,9 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%%= yeoman.app %>/images',
+                    cwd: '<%%= yeoman.app %>/img',
                     src: '{,*/}*.svg',
-                    dest: '<%%= yeoman.dist %>/images'
+                    dest: '<%%= yeoman.dist %>/img'
                 }]
             }
         },
@@ -309,9 +309,9 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '.tmp/concat/scripts',
+                    cwd: '.tmp/concat/js',
                     src: '*.js',
-                    dest: '.tmp/concat/scripts'
+                    dest: '.tmp/concat/js'
                 }]
             }
         },
@@ -321,17 +321,17 @@ module.exports = function (grunt) {
             server: [<% if (coffee) { %>
                 'coffee:dist',<% } %><% if (compass) { %>
                 'compass:server'<% } else { %>
-                'copy:styles'<% } %>
+                'copy:css'<% } %>
             ],
             test: [<% if (coffee) { %>
                 'coffee',<% } %><% if (compass) { %>
                 'compass'<% } else { %>
-                'copy:styles'<% } %>
+                'copy:css'<% } %>
             ],
             dist: [<% if (coffee) { %>
                 'coffee',<% } %><% if (compass) { %>
                 'compass:dist',<% } else { %>
-                'copy:styles',<% } %>
+                'copy:css',<% } %>
                 'imagemin',
                 'svgmin'
             ]
