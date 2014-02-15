@@ -386,7 +386,7 @@ Generator.prototype.appJs = function appJs() {
         html: this.indexFile,
         fileType: 'js',
         optimizedPath: 'js/js.js',
-        sourceFileList: ['js/app.js', 'js/controllers/main.js'],
+        sourceFileList: ['js/app.js', 'js/controller/main.js'],
         searchPath: ['.tmp', 'www']
     });
 };

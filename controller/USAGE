@@ -5,4 +5,4 @@ Example:
     yo angular:controller Thing [--coffee]
 
     This will create:
-        app/scripts/controllers/thing-ctrl.js
+        www/js/controller/thing-ctrl.js

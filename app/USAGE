@@ -8,12 +8,12 @@ Example:
         Gruntfile.js
         bower.json
 
-        app/index.html
-        app/scripts/your-app-name-here.js
-        app/scripts/controllers/main.js
-        app/bower_components/angular/angular.js
-        app/styles/main.css
-        app/views/main.html
+        www/index.html
+        www/js/your-app-name-here.js
+        www/js/controllers/main.js
+        www/vendor/angular/angular.js
+        www/css/main.css
+        www/tpl/main.html
 
         test/lib/angular-mocks.js
         test/spec/controllers/main.js
