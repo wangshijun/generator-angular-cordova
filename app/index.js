@@ -53,15 +53,15 @@ var Generator = module.exports = function Generator(args, options) {
         this.env.options.coffee = this.options.coffee;
     }
 
-    this.hookFor('angular:common', {
+    this.hookFor('angular-cordova:common', {
         args: args
     });
 
-    this.hookFor('angular:main', {
+    this.hookFor('angular-cordova:main', {
         args: args
     });
 
-    this.hookFor('angular:controller', {
+    this.hookFor('angular-cordova:controller', {
         args: args
     });
 
@@ -409,12 +409,7 @@ Generator.prototype.packageFiles = function () {
 
 Generator.prototype.imageFiles = function () {
     this.sourceRoot(path.join(__dirname, 'templates'));
-    this.directory('images', 'www/images', true);
-};
-
-Generator.prototype.imageFiles = function () {
-    this.sourceRoot(path.join(__dirname, 'templates'));
-    this.directory('images', 'www/images', true);
+    this.directory('img', 'www/img', true);
 };
 
 Generator.prototype._injectDependencies = function _injectDependencies() {
