@@ -13,12 +13,6 @@ var _ = require('lodash');
 var Generator = module.exports = function Generator(args, options) {
     yeoman.generators.Base.apply(this, arguments);
 
-    this.option('app-suffix', {
-        desc: 'Allow a custom suffix to be added to the module name',
-        type: String,
-        required: 'false'
-    });
-
     args = ['main'];
 
     this.hookFor('angular-cordova:common', {
