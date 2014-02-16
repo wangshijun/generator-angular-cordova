@@ -26,7 +26,7 @@ Run `grunt` for building and `grunt serve` for preview
 
 Available generators:
 
-* [angular-cordova](#app) (aka [angular-cordovaapp](#app))
+* [angular-cordova](#app) (aka [angular-cordova:app](#app))
 * [angular-cordova:controller](#controller)
 * [angular-cordova:directive](#directive)
 * [angular-cordova:filter](#filter)
@@ -46,7 +46,7 @@ Sets up a new AngularJS app, generating all the boilerplate you need to get star
 
 Example:
 ```bash
-yo angular
+yo angular-cordova
 ```
 
 ### Route
@@ -54,7 +54,7 @@ Generates a controller and view, and configures a route in `app/js/app.js` conne
 
 Example:
 ```bash
-yo angular-cordovaroute myroute
+yo angular-cordova:route myroute
 ```
 
 Produces `www/js/controller/myroute.js`:
@@ -74,7 +74,7 @@ Generates a controller in `www/js/controller`.
 
 Example:
 ```bash
-yo angular-cordovacontroller user
+yo angular-cordova:controller user
 ```
 
 Produces `www/js/controller/user.js`:
@@ -88,7 +88,7 @@ Generates a directive in `www/js/directive`.
 
 Example:
 ```bash
-yo angular-cordovadirective myDirective
+yo angular-cordova:directive myDirective
 ```
 
 Produces `www/js/directive/myDirective.js`:
@@ -109,7 +109,7 @@ Generates a filter in `www/js/filter`.
 
 Example:
 ```bash
-yo angular-cordovafilter myFilter
+yo angular-cordova:filter myFilter
 ```
 
 Produces `www/js/filter/myFilter.js`:
@@ -126,7 +126,7 @@ Generates an HTML view file in `www/views`.
 
 Example:
 ```bash
-yo angular-cordovaview user
+yo angular-cordova:view user
 ```
 
 Produces `www/views/user.html`:
@@ -139,7 +139,7 @@ Generates an AngularJS service.
 
 Example:
 ```bash
-yo angular-cordovaservice myService
+yo angular-cordova:service myService
 ```
 
 Produces `www/js/service/myService.js`:
@@ -156,7 +156,7 @@ Generates an AngularJS service decorator.
 
 Example:
 ```bash
-yo angular-cordovadecorator serviceName
+yo angular-cordova:decorator serviceName
 ```
 
 Produces `www/js/decorators/serviceNameDecorator.js`:
