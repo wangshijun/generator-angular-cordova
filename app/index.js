@@ -417,12 +417,12 @@ Generator.prototype.imageFiles = function () {
 
     if (this.copyIcons && this.platforms.indexOf('android') > -1) {
         this.directory('res/icon/android', 'www/res/icon/android', true);
-        this.directory('res/screen/android', 'www/screen/icon/android', true);
+        this.directory('res/screen/android', 'www/res/screen/android', true);
     }
 
     if (this.copyIcons && this.platforms.indexOf('ios') > -1) {
         this.directory('res/icon/ios', 'www/res/icon/ios', true);
-        this.directory('res/screen/ios', 'www/screen/icon/ios', true);
+        this.directory('res/screen/ios', 'www/res/screen/ios', true);
     }
 };
 
