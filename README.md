@@ -2,6 +2,40 @@
 
 > [Yeoman](http://yeoman.io) generator for Angular + Ionic + Cordova, let you quickly setup a project with sensible default and best practices
 
+## Getting started
+- Make sure you have the following installed:
+    - [yo](https://github.com/yeoman/yo): `npm install -g yo`
+    - [grunt-cli](https://github.com/gruntjs/grunt): `npm install -g grunt-cli`
+    - [cordova-cli](https://github.com/apache/cordova-cli): `npm install -g cordova`
+
+- Install any SDKs you need for developing platform applications:
+    - [iOS](https://developer.apple.com/xcode/)
+    - [Android](http://developer.android.com/sdk/index.html#ExistingIDE)
+    - etc...
+
+- Install the generator: `npm install -g generator-angular-cordova`
+- Run: `yo angular-cordova`
+
+
+## Usage
+Once you have ran `yo angular-cordova` and answered some questions, yeoman should now have scaffolded a cordova, ionic, angular skeleton for you.
+
+### Serve to web browser
+To deploy as local web server and watch for changes requires the installation of [LiveReload](http://livereload.com/) browser extension.
+
+`grunt serve --platform=ios`: prepares and serves the application as a local web server at [http://localhost:9000/](http://localhost:9000/), watching for changes then preparing/redeploying the web server.
+
+### Serve to emulator
+`grunt emulate`: builds and emulates all installed platforms
+
+`grunt live-emulate`: builds and emulates all installed platforms, watching for changes then building/redeploying the emulator.
+
+### Serve to device
+`grunt device`: builds and runs all installed platforms
+
+`grunt live-device`: builds and runs all installed platforms, watching for changes then building/redeploying.
+
+
 ## Usage
 
 Install `generator-angular-cordova`:
