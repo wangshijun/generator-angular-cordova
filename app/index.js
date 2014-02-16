@@ -84,7 +84,7 @@ Generator.prototype.welcome = function welcome() {
 };
 
 Generator.prototype.askForCordova = function askForCordova() {
-    var cb = this.async();
+    var next = this.async();
 
     // We do some working directory hoping, so keep a track where we start
     this.cwd = process.cwd();
@@ -185,6 +185,12 @@ Generator.prototype.askForCordova = function askForCordova() {
                     checked: false
                 }
             ]
+        },
+        {
+            type: 'confirm',
+            name: 'copyIcons',
+            message: 'Would you like to copy some sample icons for cordova?',
+            default: true
         }
     ];
 
@@ -224,19 +230,24 @@ Generator.prototype.askForCordova = function askForCordova() {
         // console.log('scriptAppName: ' + this.scriptAppName);
         // console.log('appPath: ' + this.appPath);
 
-        cb();
+        next();
     }.bind(this));
 };
 
 Generator.prototype.cordovaCreate = function cordovaCreate() {
+    var next = this.async(),
+        appPath = this.appPath;
+
     console.log("Creating cordova app: " + this.appname);
-    var cb = this.async();
     try {
         cordova.create(process.cwd(), this.packagename, this.appname, function () {
-            // remove cordova files
-            fs.unlinkSync(process.cwd() + '/' + this.appPath + '/js/index.js');
-            fs.unlinkSync(process.cwd() + '/' + this.appPath + '/css/index.css');
-            cb();
+            // remove cordova created files, we will write later
+            var cwd = process.cwd();
+            fs.unlinkSync(cwd + '/' + appPath + '/js/index.js');
+            fs.unlinkSync(cwd + '/' + appPath + '/css/index.css');
+            fs.unlinkSync(cwd + '/' + appPath + '/index.html');
+            fs.renameSync(cwd + '/' + appPath + '/img/logo.png', cwd + '/' + appPath + '/img/cordova.png');
+            next();
         });
     } catch (err) {
         console.error('Failed to create cordova proect: ' + err);
@@ -251,24 +262,24 @@ Generator.prototype.addPlatforms = function addPlatforms() {
 
     console.log('Adding requested platforms to the Cordova project...');
 
-    var cb = this.async();
-    addPlatformsToCordova(0, this.platforms, cb);
+    var next = this.async();
+    addPlatformsToCordova(0, this.platforms, next);
 };
 
 Generator.prototype.addPlugins = function addPlugins() {
     console.log('Installing the Cordova plugins...');
 
-    var cb = this.async();
+    var next = this.async();
     if (this.plugins.length) {
-        addPluginsToCordova(0, this.plugins, cb);
+        addPluginsToCordova(0, this.plugins, next);
     } else {
         console.log(chalk.gray('no plugin selected'));
-        cb();
+        next();
     }
 }
 
 Generator.prototype.askForCompass = function askForCompass() {
-    var cb = this.async();
+    var next = this.async();
 
     this.prompt([{
         type: 'confirm',
@@ -278,13 +289,13 @@ Generator.prototype.askForCompass = function askForCompass() {
     }], function (props) {
         this.compass = props.compass;
 
-        cb();
+        next();
     }.bind(this));
 };
 
 Generator.prototype.askForIonic = function askForIonic() {
     var compass = this.compass;
-    var cb = this.async();
+    var next = this.async();
 
     this.prompt([{
         type: 'confirm',
@@ -303,12 +314,12 @@ Generator.prototype.askForIonic = function askForIonic() {
         this.ionic = props.ionic;
         this.compassIonic = props.compassIonic;
 
-        cb();
+        next();
     }.bind(this));
 };
 
 Generator.prototype.askForAngularModules = function askForAngularModules() {
-    var cb = this.async();
+    var next = this.async();
 
     var prompts = [{
         type: 'checkbox',
@@ -357,7 +368,7 @@ Generator.prototype.askForAngularModules = function askForAngularModules() {
             this.env.options.angularDeps = angMods.join(", ");
         }
 
-        cb();
+        next();
     }.bind(this));
 };
 
@@ -403,11 +414,13 @@ Generator.prototype.packageFiles = function () {
 Generator.prototype.imageFiles = function () {
     this.sourceRoot(path.join(__dirname, 'templates'));
     this.directory('img', 'www/img', true);
-    if (this.platforms.indexOf('android') > -1) {
+
+    if (this.copyIcons && this.platforms.indexOf('android') > -1) {
         this.directory('res/icon/android', 'www/res/icon/android', true);
         this.directory('res/screen/android', 'www/screen/icon/android', true);
     }
-    if (this.platforms.indexOf('ios') > -1) {
+
+    if (this.copyIcons && this.platforms.indexOf('ios') > -1) {
         this.directory('res/icon/ios', 'www/res/icon/ios', true);
         this.directory('res/screen/ios', 'www/screen/icon/ios', true);
     }
@@ -433,16 +446,16 @@ Generator.prototype._injectDependencies = function _injectDependencies() {
     }
 };
 
-function addPlatformsToCordova(index, platforms, cb) {
+function addPlatformsToCordova(index, platforms, next) {
     if (!(index < platforms.length)) {
-        cb();
+        next();
         return;
     }
 
     try {
         cordova.platform('add', platforms[index], function () {
             console.log(chalk.green('✔ ') + ' added ' + chalk.gray(platforms[index]));
-            addPlatformsToCordova(index + 1, platforms, cb);
+            addPlatformsToCordova(index + 1, platforms, next);
         });
     } catch (err) {
         console.error('Failed to add platform ' + platforms['index'] + ': ' + err);
@@ -450,15 +463,15 @@ function addPlatformsToCordova(index, platforms, cb) {
     }
 }
 
-function addPluginsToCordova(index, plugins, cb) {
+function addPluginsToCordova(index, plugins, next) {
     if (!(index < plugins.length)) {
-        cb();
+        next();
         return;
     }
 
     cordova.plugin('add', plugins[index], function () {
         console.log(chalk.green('✔ ') + ' added ' + chalk.gray(plugins[index]));
-        addPluginsToCordova(index + 1, plugins, cb);
+        addPluginsToCordova(index + 1, plugins, next);
     });
 }
 
